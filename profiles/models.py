@@ -6,8 +6,30 @@ from django.core.mail import send_mail
 
 
 class UserProfileManager(BaseUserManager):
-    '''contains userprofile management functions'''
-    pass
+    '''userprofile manager'''
+
+    def create_user(self, email, password, first_name, **extra_fields):
+        '''create and save a new user'''
+        if email is None:
+            raise ValueError("Email field is required!")
+        if first_name is None or len(first_name) == 0:
+            raise ValueError('First name field is required!')
+        email = self.normalize_email(email)
+
+        user = self.model(email=email, password=password,
+                          first_name=first_name, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password, first_name, **extra_fields):
+        '''create and save a new super user'''
+        superuser = self.create_user(
+            email, password, first_name, **extra_fields)
+        superuser.is_staff = True
+        superuser.is_superuser = True
+        superuser.save(using=self._db)
+        return superuser
 
 
 class UserProfile(AbstractBaseUser, PermissionsMixin):
@@ -21,7 +43,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     objects = UserProfileManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name']
+    REQUIRED_FIELDS = ['first_name']
 
     def __str__(self):
         '''return string representation of userprofile model'''

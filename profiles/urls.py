@@ -7,6 +7,8 @@ base_router = DefaultRouter()
 base_router.register(
     'profiles', views.UserProfileViewSet)
 
+base_router.register('feeds', views.FeedViewSet)
+
 
 urlpatterns = [
     path(r'', include(base_router.urls)),

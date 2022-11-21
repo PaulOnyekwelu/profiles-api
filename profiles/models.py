@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import (
     AbstractBaseUser, PermissionsMixin,
     BaseUserManager)
@@ -60,3 +61,18 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     def email_user(self, subject, message, from_email=None, **kwargs):
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+
+class FeedModel(models.Model):
+    '''defines the model for a feed resource'''
+    user_profile = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='feeds'
+    )
+    status_text = models.CharField(max_length=255)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        '''returns a string representation of the FeedModel'''
+        return self.status_text

@@ -5,6 +5,7 @@ from rest_framework.filters import SearchFilter
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 from profiles import serializers, models, permissions
@@ -17,12 +18,24 @@ class UserProfileViewSet(ModelViewSet):
     filter_backends = (SearchFilter,)
     search_fields = ('email', 'first_name', 'last_name')
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (permissions.UpdateOwnProfile,)
+    permission_classes = (permissions.UpdateOwnProfile, IsAuthenticated)
 
 
 class UserLoginAPIView(ObtainAuthToken):
     '''Handles user login token generation'''
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
+
+
+class FeedViewSet(ModelViewSet):
+    '''api endpoints for feeds'''
+    serializer_class = serializers.FeedSerializer
+    queryset = models.FeedModel.objects.all()
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.UpdateOwnFeeds, IsAuthenticated)
+
+    def perform_create(self, serializer):
+        '''save logged user as user_profile'''
+        serializer.save(user_profile=self.request.user)
 
 
 # class UserProfileView(ViewSet):

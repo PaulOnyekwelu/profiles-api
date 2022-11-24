@@ -7,8 +7,6 @@ PROJECT_GIT_URL='https://github.com/RxKachi/profiles-api.git'
 PROJECT_BASE_PATH='/usr/local/apps'
 VIRTUALENV_BASE_PATH='/usr/local/virtualenvs'
 
-cp /usr/local/apps/profiles-api/deploy/supervisor_profiles_api.conf /etc/supervisor/conf.d/profiles_api.conf
-
 # Set Ubuntu Language
 locale-gen en_GB.UTF-8
 

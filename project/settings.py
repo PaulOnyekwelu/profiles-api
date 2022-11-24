@@ -128,4 +128,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'profiles.UserProfile'
 
-STATIC_ROOT = '/static'
+STATIC_ROOT = 'static/'
